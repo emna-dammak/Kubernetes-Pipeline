@@ -1,7 +1,7 @@
  pipeline {
        agent any
        environment {
-           DOCKER_IMAGE = 'votre-dockerhub/mon-app'
+           DOCKER_IMAGE = 'emnadammak/mon-app'
        }
        stages {
            stage('Cloner le dépôt') {
