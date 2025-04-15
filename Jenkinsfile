@@ -2,8 +2,11 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'emnadammak/mon-app'
-    }
+        DOCKER_HUB_CREDS = credentials('dockerhub-credentials')
+        DOCKER_IMAGE_NAME = "emnadammak/spring-boot-app"
+        DOCKER_IMAGE_TAG = "${BUILD_NUMBER}"
+        // Ajout de ces variables pour s'assurer que Docker fonctionne correctement
+        DOCKER_HOST = 'unix:///var/run/docker.sock'    }
 
     stages {
         stage('Cloner le dépôt') {
