@@ -4,7 +4,6 @@ pipeline {
     environment {
         DOCKER_HUB_CREDS = credentials('dockerhub-credentials')
         DOCKER_IMAGE_NAME = "emnadammak/mon-app"
-        DOCKER_IMAGE_TAG = "${BUILD_NUMBER}"
         // Ajout de ces variables pour s'assurer que Docker fonctionne correctement
         DOCKER_HOST = 'unix:///var/run/docker.sock'    }
 
@@ -27,7 +26,7 @@ pipeline {
             steps {
                  withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_HUB_PASSWORD', usernameVariable: 'DOCKER_HUB_USERNAME')]) {
                     sh 'echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin'
-                    sh "docker push ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
+                    sh "docker push ${DOCKER_IMAGE_NAME}"
                     sh "docker push ${DOCKER_IMAGE_NAME}:latest"
                 }
             }
