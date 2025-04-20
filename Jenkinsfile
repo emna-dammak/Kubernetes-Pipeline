@@ -1,29 +1,37 @@
 pipeline {
     agent any
+
     environment {
-        DOCKER_IMAGE = 'emnadammak/mon-app'
-        HELM_CHART_PATH = './mon-app'
-    }
+        DOCKER_HUB_CREDS = credentials('dockerhub-credentials')
+        DOCKER_IMAGE_NAME = "emnadammak/mon-app"
+        // Ajout de ces variables pour s'assurer que Docker fonctionne correctement
+        DOCKER_HOST = 'unix:///var/run/docker.sock'    }
+
     stages {
         stage('Cloner le dépôt') {
             steps {
                 checkout scm
             }
         }
+
         stage('Construire l\'image Docker') {
             steps {
-                sh 'docker build -t $DOCKER_IMAGE .'
-            }
-        }
-        stage('Pousser l\'image Docker') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                    sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-                    sh 'docker push $DOCKER_IMAGE'
+                script {
+                    sh "docker build -t $DOCKER_IMAGE_NAME ."
                 }
             }
         }
-        stage('Déployer avec Helm') {
+
+        stage('Pousser l\'image Docker') {
+            steps {
+                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_HUB_PASSWORD', usernameVariable: 'DOCKER_HUB_USERNAME')]) {
+                    sh 'echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin'
+                    sh "docker push ${DOCKER_IMAGE_NAME}"
+                    sh "docker push ${DOCKER_IMAGE_NAME}:latest"
+                }
+            }
+        }
+       stage('Déployer avec Helm') {
             steps {
                 sh 'helm upgrade --install mon-app $HELM_CHART_PATH'
             }
