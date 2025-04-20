@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('Cloner le dépôt') {
             steps {
-                git 'https://github.com/ton-utilisateur/mon-app.git'
+                git 'https://github.com/emna-dammak/Kubernetes-Pipeline'
             }
         }
         stage('Construire l\'image Docker') {
