@@ -5,6 +5,7 @@ pipeline {
         DOCKER_HUB_CREDS = credentials('dockerhub-credentials')
         DOCKER_IMAGE_NAME = "emnadammak/mon-app"
         // Ajout de ces variables pour s'assurer que Docker fonctionne correctement
+        HELM_CHART_PATH = './mon-app'
         DOCKER_HOST = 'unix:///var/run/docker.sock'    }
 
     stages {
@@ -33,7 +34,7 @@ pipeline {
         }
        stage('Déployer avec Helm') {
             steps {
-                sh 'helm upgrade --install mon-app $HELM_CHART_PATH'
+                  sh 'helm upgrade --install mon-app $HELM_CHART_PATH'
             }
         }
     }
