@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('Cloner le dépôt') {
             steps {
-                git 'https://github.com/emna-dammak/Kubernetes-Pipeline'
+                checkout scm
             }
         }
         stage('Construire l\'image Docker') {
