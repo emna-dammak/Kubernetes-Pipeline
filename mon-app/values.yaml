@@ -10,5 +10,3 @@ containerPort: 80
 service:
   type: LoadBalancer
   port: 80
-serviceAccount:
-  create: false
